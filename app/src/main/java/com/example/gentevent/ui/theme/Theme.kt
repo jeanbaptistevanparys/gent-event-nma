@@ -12,11 +12,11 @@ private val DarkColorPalette = darkColors(
     primaryVariant = Purple700,
     secondary = Genteventred,
 
-    background = Color.White,
-    surface = GenteventBlue,
+    background = GenteventBlue,
+    surface = Color.Black,
     onPrimary = Color.White,
     onSecondary = Color.Black,
-    onBackground = Color.Black,
+    onBackground = Color.White,
     onSurface = Color.Black,
 )
 
@@ -26,9 +26,9 @@ private val LightColorPalette = lightColors(
     secondary = Genteventred,
 
 
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
+    background = GenteventBlue,
+    surface = Color.Black,
+    onPrimary = Color.Black,
     onSecondary = Color.Black,
     onBackground = Color.Black,
     onSurface = Color.Black,
@@ -38,7 +38,9 @@ private val LightColorPalette = lightColors(
 @Composable
 fun GenteventTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) {
-        DarkColorPalette
+       // DarkColorPalette
+        // TODO
+        LightColorPalette
     } else {
         LightColorPalette
     }
