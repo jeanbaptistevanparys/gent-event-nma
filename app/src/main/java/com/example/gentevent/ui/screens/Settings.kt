@@ -11,16 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
 import com.example.gentevent.ui.theme.GenteventTheme
 
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavHostController?) {
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colors.background),
-        topBar = { Top() },
+        topBar = { Top {
+            navController?.popBackStack()
+        }
+        },
         content = { innerPadding ->
             RoundedContainer(
                 innerPadding = innerPadding,
@@ -86,6 +90,6 @@ fun Setting(text: String) {
 @Composable
 fun SettingsPreview() {
     GenteventTheme {
-        SettingsScreen()
+        SettingsScreen(null)
     }
 }

@@ -2,7 +2,9 @@ package com.example.gentevent.ui.screens.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.gentevent.R
 
 @Composable
-fun Top() {
+fun Top(OnBack: () -> Unit) {
     TopAppBar(
         modifier = Modifier
             .background(color = MaterialTheme.colors.primary)
@@ -29,7 +31,10 @@ fun Top() {
             .fillMaxSize(),
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                            OnBack()
+
+                },
                 modifier = Modifier
                     .size(50.dp)
                     .align(Alignment.CenterStart),

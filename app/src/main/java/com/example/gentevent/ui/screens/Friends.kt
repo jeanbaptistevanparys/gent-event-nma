@@ -1,6 +1,5 @@
 package com.example.gentevent.ui.screens
 
-import android.widget.ScrollView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,16 +20,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
 import com.example.gentevent.ui.theme.GenteventTheme
 
 @Composable
-fun FriendsScreen() {
+fun FriendsScreen(navController: NavHostController?) {
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colors.background),
-        topBar = { Top() },
+        topBar = { Top {
+            navController?.popBackStack()
+        }
+        },
         content = { innerPadding ->
             RoundedContainer(
                 innerPadding = innerPadding,
@@ -153,6 +156,6 @@ fun FriendRow(name: String, src: String, content: @Composable () -> Unit) {
 @Composable
 fun FriendsScreenPreview() {
     GenteventTheme {
-        FriendsScreen()
+        FriendsScreen(null)
     }
 }
