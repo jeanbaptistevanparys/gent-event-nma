@@ -21,7 +21,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.R
 import com.example.gentevent.ui.theme.GenteventTheme
 
-
 @Composable
 fun MainScreen(navController: NavHostController?) {
     Scaffold(topBar = { MainTop(navController) }, content = { innerPadding ->
@@ -146,6 +145,7 @@ fun DateButton(s: String) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EventCard( src: String, title: String = "Event", location: String = "Location", friends: Int = 2 , time: String = "Time") {
     Card(
@@ -156,6 +156,9 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
         backgroundColor = Color.White,
         contentColor = Color.Black,
         elevation = 10.dp,
+        onClick = {
+
+        }
     ) {
         Column {
             Image(
