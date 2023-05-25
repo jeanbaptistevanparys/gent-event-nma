@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +31,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                 .padding(innerPadding)
                 .background(color = Color.White)
         ) {
+            DateRow(viewModel)
             when(viewModel.events) {
                 is IEventsUIstate.Loading -> {
                     CircularProgressIndicator(
@@ -42,7 +42,6 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                 }
                 is IEventsUIstate.Success -> {
                     var events = (viewModel.events as IEventsUIstate.Success).Events
-                    DateRow(viewModel)
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -62,7 +61,12 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
 
                 }
                 is IEventsUIstate.Error -> {
-                    Text(text = "Error")
+                    Text(
+                        text = "something went wrong :(",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center)
+                    )
                 }
             }
         }
@@ -222,8 +226,19 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                 ) {
                     Text(text = event.title, style = MaterialTheme.typography.h5)
                     Row(
-                        modifier = Modifier
-                            .clickable { /*TODO*/ },
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.category),
+                            contentDescription = "category",
+                            modifier = Modifier
+                                .size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = event.category, style = MaterialTheme.typography.h6)
+                    }
+                    Row(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically
                     ) {

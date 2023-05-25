@@ -10,8 +10,7 @@ sealed interface IEventsUIstate {
 }
 
 data class EventUIState(
-    var Events: IEventsUIstate = IEventsUIstate.Loading,
-    var clickedEvent: Event? = null
+    var clickedEvent: Event? = null,
 )
 
 
