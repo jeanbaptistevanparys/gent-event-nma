@@ -30,26 +30,26 @@ import com.example.gentevent.ui.theme.GenteventTheme
 fun FriendsScreen(navController: NavHostController?) {
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colors.background),
-        topBar = { Top {
-            navController?.popBackStack()
-        }
+        topBar = {
+            Top {
+                navController?.popBackStack()
+            }
         },
         content = { innerPadding ->
             RoundedContainer(
                 innerPadding = innerPadding,
-                content = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(10.dp)
-                    ) {
-                        FriendSearchBar()
-                        FriendRequests(mapOf("Bob" to "https://yt3.googleusercontent.com/ZJGwKd4H-lsmPo6cZ2WJ7aaU6uRJYOAmj-MDIDy_Se0sUu3iM41hG3KXgVz690DeEPRqxaKx=s900-c-k-c0x00ffffff-no-rj"))
-                        Friends(mapOf("Bob" to "https://yt3.googleusercontent.com/ZJGwKd4H-lsmPo6cZ2WJ7aaU6uRJYOAmj-MDIDy_Se0sUu3iM41hG3KXgVz690DeEPRqxaKx=s900-c-k-c0x00ffffff-no-rj"))
-                    }
-
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)
+                ) {
+                    FriendSearchBar()
+                    FriendRequests(mapOf("Bob" to "https://yt3.googleusercontent.com/ZJGwKd4H-lsmPo6cZ2WJ7aaU6uRJYOAmj-MDIDy_Se0sUu3iM41hG3KXgVz690DeEPRqxaKx=s900-c-k-c0x00ffffff-no-rj"))
+                    Friends(mapOf("Bob" to "https://yt3.googleusercontent.com/ZJGwKd4H-lsmPo6cZ2WJ7aaU6uRJYOAmj-MDIDy_Se0sUu3iM41hG3KXgVz690DeEPRqxaKx=s900-c-k-c0x00ffffff-no-rj"))
                 }
-            )
+
+            }
         }
     )
 
@@ -82,7 +82,7 @@ fun FriendRequests(friends: Map<String, String>) {
         Text(text = "Friend requests")
         friends.forEach {
             FriendRow(it.key, it.value) {
-                Row{
+                Row {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Rounded.Check,

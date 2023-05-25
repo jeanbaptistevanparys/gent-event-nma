@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,36 +20,57 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.R
+import com.example.gentevent.model.Event
 import com.example.gentevent.ui.theme.GenteventTheme
 
 @Composable
-fun MainScreen(navController: NavHostController?) {
-    Scaffold(topBar = { MainTop(navController) }, content = { innerPadding ->
+fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
+    Scaffold(topBar = { MainTop(navController, viewModel) }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(color = Color.White)
         ) {
-            DateRow()
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+            when(viewModel.events) {
+                is IEventsUIstate.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .wrapContentSize(Alignment.Center)
+                    )
+                }
+                is IEventsUIstate.Success -> {
+                    var events = (viewModel.events as IEventsUIstate.Success).Events
+                    DateRow(viewModel)
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
 
-                content = {
-                    item {
-                        EventCard("https://visit.gent.be/sites/default/files/styles/photo_large/public/img/poi/hero/PuurGent-DT007776.JPG?itok=ovwPh5rN", "moeder jager", "the place", 4 , "12/05" )
+                    ) {
+                        events.events.forEach()
+                          { event: Event ->
+                            item {
+                                EventCard(
+                                    navController,
+                                    viewModel,
+                                    event
+                                )
+                            }
+                        }
                     }
-                    item {
-                        EventCard("https://i1.sndcdn.com/artworks-LvSA99OTfi9LqsYA-vd9FQw-t500x500.jpg","moeder jager", "the place", 2,"13/05" )
-                    }
-                })
+
+                }
+                is IEventsUIstate.Error -> {
+                    Text(text = "Error")
+                }
+            }
         }
-    })
+    }
 }
 
 @Composable
-fun MainTop(navController: NavHostController?) {
+fun MainTop(navController: NavHostController?, viewModel: EventViewModel) {
     TopAppBar(
         modifier = Modifier
             .background(color = MaterialTheme.colors.primary)
@@ -93,6 +115,8 @@ fun MainTop(navController: NavHostController?) {
                 modifier = Modifier
                     .align(Alignment.Center)
                     .size(100.dp)
+                    .clickable { viewModel.getEvents() }
+
             )
         }
 
@@ -100,37 +124,52 @@ fun MainTop(navController: NavHostController?) {
 }
 
 @Composable
-fun DateRow() {
+fun DateRow(viewModel: EventViewModel) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp, top = 0.dp),
+            .background(
+                color = Color.White,
+            ),
         verticalAlignment = Alignment.Top,
 
         ) {
+
         item {
-            DateButton("MA")
+            DateButton("MA") {
+                viewModel.filterEvents("ma")
+            }
         }
         item {
-            DateButton("DI")
+            DateButton("DI") {
+                viewModel.filterEvents("di")
+            }
         }
         item {
-            DateButton("WO")
+            DateButton("WO") {
+                viewModel.filterEvents("wo")
+            }
         }
         item {
-            DateButton("DO")
+            DateButton("DO") {
+                viewModel.filterEvents("do")
+            }
         }
         item {
-            DateButton("VR")
+            DateButton("VR") {
+                viewModel.filterEvents("vr")
+            }
         }
     }
 
 }
 
 @Composable
-fun DateButton(s: String) {
+fun DateButton(s: String, onclick: () -> Unit) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = {
+            onclick()
+        },
         modifier = Modifier
             .padding(10.dp)
             .height(50.dp)
@@ -147,7 +186,7 @@ fun DateButton(s: String) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun EventCard( src: String, title: String = "Event", location: String = "Location", friends: Int = 2 , time: String = "Time") {
+fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, event: Event) {
     Card(
         modifier = Modifier
             .padding(10.dp)
@@ -157,12 +196,14 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
         contentColor = Color.Black,
         elevation = 10.dp,
         onClick = {
-
+            println(event)
+            viewModel?.setEventClicked(event)
+            navController?.navigate("detail_event")
         }
     ) {
         Column {
             Image(
-                painter = rememberAsyncImagePainter(model = src),
+                painter = rememberAsyncImagePainter(model = event.imgUrl),
                 contentDescription = "event image",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -179,7 +220,7 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
                 Column (
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text(text = title, style = MaterialTheme.typography.h5)
+                    Text(text = event.title, style = MaterialTheme.typography.h5)
                     Row(
                         modifier = Modifier
                             .clickable { /*TODO*/ },
@@ -193,9 +234,9 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
                                 .size(20.dp),
                         )
                         Spacer(modifier = Modifier.width(10.dp))
-                        Text(text = location, style = MaterialTheme.typography.h6)
+                        Text(text = event.locationName, style = MaterialTheme.typography.h6)
                     }
-                    Text(text = "$friends friends are going", style = MaterialTheme.typography.h6)
+                    Text(text = "${event.friends} friends are going", style = MaterialTheme.typography.h6)
                 }
                 Button(
                     onClick = { /*TODO*/ },
@@ -206,7 +247,7 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
                     shape = RoundedCornerShape(30.dp),
                 ) {
                     Text(
-                        text = time,
+                        text = event.date,
                         color = Color.White,
                     )
                 }
@@ -220,6 +261,7 @@ fun EventCard( src: String, title: String = "Event", location: String = "Locatio
 @Composable
 fun MaintPreview() {
     GenteventTheme {
-        MainScreen(null)
+       // MainScreen(null)
+        //todo fix preview
     }
 }

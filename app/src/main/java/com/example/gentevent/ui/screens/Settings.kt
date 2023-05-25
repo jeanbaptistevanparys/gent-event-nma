@@ -67,9 +67,10 @@ fun Setting(text: String) {
         )
         Switch(
             checked = true,
+            enabled = false,
             onCheckedChange = { isChecked ->
                 if (isChecked) {
-                    // The switch is checked.
+                    // The switch is checked
                 } else {
                     // The switch is not checked.
                 }
@@ -79,7 +80,7 @@ fun Setting(text: String) {
                 checkedThumbColor = MaterialTheme.colors.primary,
                 checkedTrackColor = MaterialTheme.colors.primary,
                 uncheckedThumbColor = Color.Gray,
-                uncheckedTrackColor = Color.LightGray
+                uncheckedTrackColor = Color.LightGray,
             )
         )
 

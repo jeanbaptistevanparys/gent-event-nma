@@ -33,7 +33,6 @@ fun Top(OnBack: () -> Unit) {
             IconButton(
                 onClick = {
                             OnBack()
-
                 },
                 modifier = Modifier
                     .size(50.dp)
