@@ -22,4 +22,12 @@ data class Event(
     val title: String = "",
     @SerialName("date")
     val date: String = "",
+    @SerialName("description")
+    val description: String = "",
+    @SerialName("category")
+    val category: String = "",
+    @SerialName("start_time")
+    val startTime: String = "",
+    @SerialName("end_time")
+    val endTime: String = "",
 )
