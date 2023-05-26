@@ -260,7 +260,7 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                     Text(text = "${event.friends} friends are going", style = MaterialTheme.typography.h6)
                 }
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { /*TODO*/  },
                     modifier = Modifier
                         .padding(10.dp)
                         .height(50.dp)
