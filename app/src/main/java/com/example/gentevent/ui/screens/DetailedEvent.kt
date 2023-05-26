@@ -2,7 +2,9 @@ package com.example.gentevent.ui.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.CalendarContract
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,8 +42,12 @@ import com.example.gentevent.R
 import com.example.gentevent.model.Event
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailEventScreen(
     navController: NavController?, viewModel: EventViewModel?
@@ -60,6 +66,7 @@ fun DetailEventScreen(
     })
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailEvent(event: Event) {
     Box(Modifier.fillMaxSize()) {
@@ -85,18 +92,36 @@ fun DetailEvent(event: Event) {
             ) {
                 Text(
                     text = event.title,
-                    style = MaterialTheme.typography.h3,
-                    modifier = Modifier.padding(10.dp)
+                    style = MaterialTheme.typography.h5,
                 )
-                Column {
+                Column(
+                    Modifier
+                        .padding(5.dp)
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+
+                ) {
+
                     Text(
-                        text = event.date,
+                        text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
+                            .format(DateTimeFormatter.ofPattern("dd-MM")),
                         style = MaterialTheme.typography.h6,
+                        color = Color.White,
                         modifier = Modifier.padding(5.dp)
                     )
                     Text(
-                        text = event.date,
+                        text = LocalTime.parse(
+                            event.startTime,
+                            DateTimeFormatter.ofPattern("HH:mm")
+                        ).format(DateTimeFormatter.ofPattern("HH:mm")) + "-" + LocalTime.parse(
+                            event.endTime,
+                            DateTimeFormatter.ofPattern("HH:mm")
+                        ).format(DateTimeFormatter.ofPattern("HH:mm")),
                         style = MaterialTheme.typography.h6,
+                        color = Color.White,
                         modifier = Modifier.padding(5.dp)
                     )
                 }
@@ -125,12 +150,15 @@ fun DetailEvent(event: Event) {
                 modifier = Modifier.padding(10.dp)
             )
         }
-        AddtoCallendar(event = event, modifier =
-        Modifier.align(Alignment.BottomCenter)
-            .padding(bottom = 20.dp)
-            .height(50.dp)
-            .width(200.dp),
-            )
+        AddtoCallendar(
+            event = event,
+            modifier =
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 20.dp)
+                .height(50.dp)
+                .width(200.dp),
+        )
     }
 
 
@@ -141,23 +169,23 @@ fun MapsLink(event: Event) {
     val context = LocalContext.current
     val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(event.location)) }
 
-        Row(
-            Modifier
-                .padding(5.dp)
-                .fillMaxWidth()
-                .clickable
-                    { context.startActivity(intent) },
-            verticalAlignment = Alignment.CenterVertically,
+    Row(
+        Modifier
+            .padding(5.dp)
+            .fillMaxWidth()
+            .clickable
+            { context.startActivity(intent) },
+        verticalAlignment = Alignment.CenterVertically,
 
-            ) {
-            Icon(
-                painter = painterResource(id = R.drawable.location),
-                contentDescription = "location",
-                modifier = Modifier.size(20.dp),
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(text = event.locationName, style = MaterialTheme.typography.h6)
-        }
+        ) {
+        Icon(
+            painter = painterResource(id = R.drawable.location),
+            contentDescription = "location",
+            modifier = Modifier.size(20.dp),
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(text = event.locationName, style = MaterialTheme.typography.h6)
+    }
 }
 
 @Composable
@@ -169,9 +197,7 @@ fun AddtoCallendar(event: Event, modifier: Modifier) {
     intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.location)
     intent.putExtra(CalendarContract.Events.DESCRIPTION, event.description)
     //todo find a way to add the date
-
     intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-
     intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.startTime)
     intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.endTime)
     intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)

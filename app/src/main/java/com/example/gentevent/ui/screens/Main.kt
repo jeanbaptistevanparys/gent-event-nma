@@ -1,5 +1,7 @@
 package com.example.gentevent.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +23,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.R
 import com.example.gentevent.model.Event
 import com.example.gentevent.ui.theme.GenteventTheme
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
     Scaffold(topBar = { MainTop(navController, viewModel) }) { innerPadding ->
@@ -41,7 +46,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                     )
                 }
                 is IEventsUIstate.Success -> {
-                    var events = (viewModel.events as IEventsUIstate.Success).Events
+                    val events = (viewModel.events as IEventsUIstate.Success).Events
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -188,6 +193,7 @@ fun DateButton(s: String, onclick: () -> Unit) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, event: Event) {
@@ -262,7 +268,8 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                     shape = RoundedCornerShape(30.dp),
                 ) {
                     Text(
-                        text = event.date,
+                        text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
+                            .format(DateTimeFormatter.ofPattern("dd-MM")),
                         color = Color.White,
                     )
                 }
@@ -274,7 +281,7 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
 
 @Preview
 @Composable
-fun MaintPreview() {
+fun MainPreview() {
     GenteventTheme {
        // MainScreen(null)
         //todo fix preview
