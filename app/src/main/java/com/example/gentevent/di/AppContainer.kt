@@ -1,7 +1,11 @@
 package com.example.gentevent.di
 
+import android.content.Context
 import com.example.gentevent.data.EventRepository
 import com.example.gentevent.data.NetworkEventRepository
+import com.example.gentevent.data.OfflineUpcomingEventsRepository
+import com.example.gentevent.data.UpcomingEventDatabase
+import com.example.gentevent.data.UpcomingEventsRepository
 import com.example.gentevent.network.EventApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -11,9 +15,10 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val eventRepository: EventRepository
+    val upcomingEventsRepository: UpcomingEventsRepository
 }
 
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(private val context : Context) : AppContainer {
     private val BASE_URL = "https://gent-event.hasura.app/api/rest/"
 
     private val json = Json {
@@ -34,5 +39,9 @@ class DefaultAppContainer : AppContainer {
 
     override val eventRepository: EventRepository by lazy {
         NetworkEventRepository(retrofitService)
+    }
+
+    override val upcomingEventsRepository: UpcomingEventsRepository by lazy {
+        OfflineUpcomingEventsRepository(UpcomingEventDatabase.getDatabase(context).upcomingEventsDao())
     }
 }

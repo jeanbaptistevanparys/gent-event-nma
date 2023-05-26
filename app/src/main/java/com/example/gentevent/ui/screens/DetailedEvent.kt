@@ -22,10 +22,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,7 +62,7 @@ fun DetailEventScreen(
     }, content = { innerPadding ->
         RoundedContainer(innerPadding = innerPadding, content = {
             if (event != null) {
-                DetailEvent(event = event)
+                DetailEvent(event = event, viewmodel = viewModel)
             }
         })
     })
@@ -68,7 +70,7 @@ fun DetailEventScreen(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DetailEvent(event: Event) {
+fun DetailEvent(event: Event, viewmodel: EventViewModel) {
     Box(Modifier.fillMaxSize()) {
 
         Column {
@@ -94,36 +96,62 @@ fun DetailEvent(event: Event) {
                     text = event.title,
                     style = MaterialTheme.typography.h5,
                 )
-                Column(
-                    Modifier
-                        .padding(5.dp)
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
 
-                ) {
+                if (viewmodel.upcomingEventUIState?.collectAsState()?.value?.UpcomingEvents?.filter { it.id == event.id }?.size != 0) {
+                    IconButton(
+                        onClick = { viewmodel.deleteUpcomingEvents(event.id) },
+                        Modifier
+                            .padding(5.dp)
+                            .background(
+                                color = MaterialTheme.colors.primary,
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.callendar),
+                            contentDescription = "checked",
+                            modifier = Modifier
+                                .size(20.dp),
+                            tint = Color.White
+                        )
+                    }
 
-                    Text(
-                        text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
-                            .format(DateTimeFormatter.ofPattern("dd-MM")),
-                        style = MaterialTheme.typography.h6,
-                        color = Color.White,
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    Text(
-                        text = LocalTime.parse(
-                            event.startTime,
-                            DateTimeFormatter.ofPattern("HH:mm")
-                        ).format(DateTimeFormatter.ofPattern("HH:mm")) + "-" + LocalTime.parse(
-                            event.endTime,
-                            DateTimeFormatter.ofPattern("HH:mm")
-                        ).format(DateTimeFormatter.ofPattern("HH:mm")),
-                        style = MaterialTheme.typography.h6,
-                        color = Color.White,
-                        modifier = Modifier.padding(5.dp)
-                    )
+                } else {
+                    Button(
+                        onClick = { viewmodel.insertUpcomingEvents(event) },
+                    ) {
+                        Column(
+                            Modifier
+                                .padding(5.dp)
+                                .background(
+                                    color = MaterialTheme.colors.primary,
+                                    shape = RoundedCornerShape(10.dp)
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
+                                    .format(DateTimeFormatter.ofPattern("dd-MM")),
+                                style = MaterialTheme.typography.h6,
+                                color = Color.White,
+                                modifier = Modifier.padding(5.dp)
+                            )
+                            Text(
+                                text = LocalTime.parse(
+                                    event.startTime,
+                                    DateTimeFormatter.ofPattern("HH:mm")
+                                )
+                                    .format(DateTimeFormatter.ofPattern("HH:mm")) + "-" + LocalTime.parse(
+                                    event.endTime,
+                                    DateTimeFormatter.ofPattern("HH:mm")
+                                ).format(DateTimeFormatter.ofPattern("HH:mm")),
+                                style = MaterialTheme.typography.h6,
+                                color = Color.White,
+                                modifier = Modifier.padding(5.dp)
+                            )
+
+                        }
+                    }
                 }
             }
             Row(

@@ -11,10 +11,12 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -267,11 +269,22 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                         .width(80.dp),
                     shape = RoundedCornerShape(30.dp),
                 ) {
-                    Text(
-                        text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
-                            .format(DateTimeFormatter.ofPattern("dd-MM")),
-                        color = Color.White,
-                    )
+                    if (viewModel?.upcomingEventUIState?.collectAsState()?.value?.UpcomingEvents?.filter { it.id == event.id }?.size != 0) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.callendar),
+                            contentDescription = "checked",
+                            modifier = Modifier
+                                .size(20.dp),
+                            tint = Color.White
+                        )
+                    } else {
+                        Text(
+                            text = LocalDate.parse(event.date, DateTimeFormatter.ISO_DATE)
+                                .format(DateTimeFormatter.ofPattern("dd-MM")),
+                            color = Color.White,
+                        )
+                    }
+
                 }
             }
         }
