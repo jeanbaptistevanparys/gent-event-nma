@@ -8,3 +8,7 @@ interface UpcomingEventsRepository{
     suspend fun insertUpcomingEvents(upcomingEvents: UpcomingEvent)
     suspend fun deleteUpcomingEvents(id : Int)
 }
+
+interface IWorkManagerRepository{
+    fun scheduleNotification(UpcomingEvent : UpcomingEvent)
+}

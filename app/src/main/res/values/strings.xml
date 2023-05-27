@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Gent Event</string>
-
+    <string name="UpcomingEvent">It\'s time for GentEvent %s.</string>
 </resources>
