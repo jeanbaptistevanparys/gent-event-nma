@@ -12,11 +12,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +31,8 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
-    Scaffold(topBar = { MainTop(navController, viewModel) }) { innerPadding ->
+    val upcomingEventUIState by viewModel.upcomingEventUIState.collectAsState()
+    Scaffold(topBar = { MainTop(navController, viewModel, upcomingEventUIState) }) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -80,8 +81,13 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainTop(navController: NavHostController?, viewModel: EventViewModel) {
+fun MainTop(
+    navController: NavHostController?,
+    viewModel: EventViewModel,
+    upcomingEventUIState: UpcomingEventUIState,
+) {
     TopAppBar(
         modifier = Modifier
             .background(color = MaterialTheme.colors.primary)
@@ -127,13 +133,34 @@ fun MainTop(navController: NavHostController?, viewModel: EventViewModel) {
                     .align(Alignment.Center)
                     .size(100.dp)
                     .clickable { viewModel.getEvents() }
-
             )
+
+            val daysuntil = viewModel.daysUntilFirstEvent()
+            if (daysuntil != null) {
+                if (daysuntil > 0) {
+                    Text(
+                        text = "Nog $daysuntil dagen tot Gent Event!",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 20.dp),
+                        color = Color.White
+                    )
+                } else {
+                    Text(
+                        text = "Gent Event is vandaag!",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .padding(bottom = 20.dp),
+                        color = Color.White
+                    )
+                }
+            }
         }
 
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DateRow(viewModel: EventViewModel) {
     LazyRow(
@@ -269,7 +296,7 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                         .width(80.dp),
                     shape = RoundedCornerShape(30.dp),
                 ) {
-                    if (viewModel?.upcomingEventUIState?.collectAsState()?.value?.UpcomingEvents?.filter { it.id == event.id }?.size != 0) {
+                    if (viewModel?.upcomingEventUIState?.collectAsState()?.value?.upcomingEvents?.filter { it.id == event.id }?.size != 0) {
                         Icon(
                             painter = painterResource(id = R.drawable.callendar),
                             contentDescription = "checked",

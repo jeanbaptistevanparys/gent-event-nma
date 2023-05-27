@@ -97,7 +97,7 @@ fun DetailEvent(event: Event, viewmodel: EventViewModel) {
                     style = MaterialTheme.typography.h5,
                 )
 
-                if (viewmodel.upcomingEventUIState?.collectAsState()?.value?.UpcomingEvents?.filter { it.id == event.id }?.size != 0) {
+                if (viewmodel.upcomingEventUIState?.collectAsState()?.value?.upcomingEvents?.filter { it.id == event.id }?.size != 0) {
                     IconButton(
                         onClick = { viewmodel.deleteUpcomingEvents(event.id) },
                         Modifier
@@ -118,7 +118,7 @@ fun DetailEvent(event: Event, viewmodel: EventViewModel) {
 
                 } else {
                     Button(
-                        onClick = { viewmodel.insertUpcomingEvents(event) },
+                        onClick = { viewmodel.insertUpcomingEvents(event) ; viewmodel.scheduleNotification(event) },
                     ) {
                         Column(
                             Modifier

@@ -1,11 +1,7 @@
 package com.example.gentevent.di
 
 import android.content.Context
-import com.example.gentevent.data.EventRepository
-import com.example.gentevent.data.NetworkEventRepository
-import com.example.gentevent.data.OfflineUpcomingEventsRepository
-import com.example.gentevent.data.UpcomingEventDatabase
-import com.example.gentevent.data.UpcomingEventsRepository
+import com.example.gentevent.data.*
 import com.example.gentevent.network.EventApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -16,6 +12,7 @@ import retrofit2.Retrofit
 interface AppContainer {
     val eventRepository: EventRepository
     val upcomingEventsRepository: UpcomingEventsRepository
+    val workmanagerRepository: WorkmanagerRepository
 }
 
 class DefaultAppContainer(private val context : Context) : AppContainer {
@@ -44,4 +41,6 @@ class DefaultAppContainer(private val context : Context) : AppContainer {
     override val upcomingEventsRepository: UpcomingEventsRepository by lazy {
         OfflineUpcomingEventsRepository(UpcomingEventDatabase.getDatabase(context).upcomingEventsDao())
     }
+
+    override val workmanagerRepository = WorkmanagerRepository(context)
 }

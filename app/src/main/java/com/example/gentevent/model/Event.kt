@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Event(
+    @SerialName("id")
+    val id: Int = 0,
     @SerialName("day")
     val day: String = "",
     @SerialName("friends")
     val friends: Int = 0,
-    @SerialName("id")
-    val id: Int = 0,
     @SerialName("img_url")
     val imgUrl: String = "",
     @SerialName("location")
