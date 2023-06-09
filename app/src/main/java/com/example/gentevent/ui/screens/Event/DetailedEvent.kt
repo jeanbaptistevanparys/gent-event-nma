@@ -98,7 +98,8 @@ fun DetailEvent(event: Event, viewmodel: EventViewModel) {
                     style = MaterialTheme.typography.h5,
                 )
 
-                if (viewmodel.upcomingEventUIState?.collectAsState()?.value?.upcomingEvents?.filter { it.id == event.id }?.size != 0) {
+                if (viewmodel.upcomingEventUIState.collectAsState().value.upcomingEvents.filter { it.id == event.id }
+                        .isNotEmpty()) {
                     IconButton(
                         onClick = { viewmodel.deleteUpcomingEvents(event.id) },
                         Modifier

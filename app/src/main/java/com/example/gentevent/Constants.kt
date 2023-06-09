@@ -20,6 +20,5 @@ const val NOTIFICATION_ID = 1
 // Request code for pending intent
 const val REQUEST_CODE = 0
 
-// Reminder schedule
-//todo
+// Reminder scheduled delay
 const val SECONDS: Long = 5

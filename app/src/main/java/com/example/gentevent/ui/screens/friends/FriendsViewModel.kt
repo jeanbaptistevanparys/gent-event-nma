@@ -44,7 +44,7 @@ class FriendsViewModel {
             }
         }else _uiState.update { currentState ->
             currentState.copy(
-                searchedFriends = currentState.friends.filter { it.name.contains(search) }
+                searchedFriends = currentState.friends.filter { it.name.lowercase().contains(search.lowercase()) }
             )
         }
     }
