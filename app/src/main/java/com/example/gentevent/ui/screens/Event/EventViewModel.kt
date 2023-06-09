@@ -1,4 +1,4 @@
-package com.example.gentevent.ui.screens
+package com.example.gentevent.ui.screens.Event
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -13,8 +13,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.gentevent.GentEventApplication
 import com.example.gentevent.data.EventRepository
+import com.example.gentevent.data.IWorkManagerRepository
 import com.example.gentevent.data.UpcomingEventsRepository
-import com.example.gentevent.data.WorkmanagerRepository
 import com.example.gentevent.model.Event
 import com.example.gentevent.model.Events
 import com.example.gentevent.model.UpcomingEvent
@@ -33,7 +33,7 @@ import java.time.format.DateTimeFormatter
 class EventViewModel(
     private val eventRepository: EventRepository,
     private val upcomingEventsRepository: UpcomingEventsRepository,
-    private val workmanagerRepository: WorkmanagerRepository
+    private val workmanagerRepository: IWorkManagerRepository
 ) : ViewModel() {
 
 

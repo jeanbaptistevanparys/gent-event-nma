@@ -1,4 +1,4 @@
-package com.example.gentevent.ui.screens
+package com.example.gentevent.ui.screens.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

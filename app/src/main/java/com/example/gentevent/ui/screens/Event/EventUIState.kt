@@ -1,4 +1,4 @@
-package com.example.gentevent.ui.screens
+package com.example.gentevent.ui.screens.Event
 
 import com.example.gentevent.model.Event
 import com.example.gentevent.model.Events

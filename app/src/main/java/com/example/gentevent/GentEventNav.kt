@@ -7,9 +7,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.gentevent.model.Event
-import com.example.gentevent.ui.screens.EventViewModel
+import com.example.gentevent.ui.screens.Event.EventViewModel
 import com.example.gentevent.ui.screens.*
+import com.example.gentevent.ui.screens.friends.DetailFriendsScreen
+import com.example.gentevent.ui.screens.friends.FriendsScreen
+import com.example.gentevent.ui.screens.friends.FriendsViewModel
+import com.example.gentevent.ui.screens.settings.SettingsScreen
 
 sealed class TopNavigationScreens(val route: String) {
     object Home : TopNavigationScreens("home")
@@ -26,6 +29,7 @@ sealed class OtherScreens(val route: String) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(){
+    val friendsviewModel: FriendsViewModel = FriendsViewModel()
     val eventviewModel: EventViewModel = viewModel(factory = EventViewModel.Factory)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = TopNavigationScreens.Home.route) {
@@ -33,7 +37,7 @@ fun Navigation(){
             MainScreen(navController = navController, eventviewModel)
         }
         composable(TopNavigationScreens.Friends.route) {
-            FriendsScreen(navController = navController)
+            FriendsScreen(navController = navController, friendsviewModel)
         }
         composable(TopNavigationScreens.Settings.route) {
             SettingsScreen(navController = navController)
@@ -42,7 +46,7 @@ fun Navigation(){
             DetailEventScreen(navController = navController, eventviewModel)
         }
         composable(OtherScreens.DetailFriends.route) {
-            DetailFriendsScreen(navController = navController)
+            DetailFriendsScreen(navController = navController, friendsviewModel)
         }
     }
 

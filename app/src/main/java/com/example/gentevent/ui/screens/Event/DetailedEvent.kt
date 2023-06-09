@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.R
 import com.example.gentevent.model.Event
+import com.example.gentevent.ui.screens.Event.EventViewModel
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
 import java.time.LocalDate

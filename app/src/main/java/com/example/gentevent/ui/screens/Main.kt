@@ -24,6 +24,9 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.R
 import com.example.gentevent.model.Event
+import com.example.gentevent.ui.screens.Event.EventViewModel
+import com.example.gentevent.ui.screens.Event.IEventsUIstate
+import com.example.gentevent.ui.screens.Event.UpcomingEventUIState
 import com.example.gentevent.ui.theme.GenteventTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -40,7 +43,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                 .background(color = Color.White)
         ) {
             DateRow(viewModel)
-            when(viewModel.events) {
+            when (viewModel.events) {
                 is IEventsUIstate.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -48,6 +51,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                             .wrapContentSize(Alignment.Center)
                     )
                 }
+
                 is IEventsUIstate.Success -> {
                     val events = (viewModel.events as IEventsUIstate.Success).Events
                     LazyColumn(
@@ -56,7 +60,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
 
                     ) {
                         events.events.forEach()
-                          { event: Event ->
+                        { event: Event ->
                             item {
                                 EventCard(
                                     navController,
@@ -68,6 +72,7 @@ fun MainScreen(navController: NavHostController?, viewModel: EventViewModel) {
                     }
 
                 }
+
                 is IEventsUIstate.Error -> {
                     Text(
                         text = "something went wrong :(",
@@ -256,7 +261,7 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                     .padding(10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                Column (
+                Column(
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(text = event.title, style = MaterialTheme.typography.h5)
@@ -286,10 +291,13 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(text = event.locationName, style = MaterialTheme.typography.h6)
                     }
-                    Text(text = "${event.friends} friends are going", style = MaterialTheme.typography.h6)
+                    Text(
+                        text = "${event.friends} friends are going",
+                        style = MaterialTheme.typography.h6
+                    )
                 }
                 Button(
-                    onClick = { /*TODO*/  },
+                    onClick = { /*TODO*/ },
                     modifier = Modifier
                         .padding(10.dp)
                         .height(50.dp)
@@ -323,7 +331,7 @@ fun EventCard(navController: NavHostController?, viewModel: EventViewModel?, eve
 @Composable
 fun MainPreview() {
     GenteventTheme {
-       // MainScreen(null)
+        // MainScreen(null)
         //todo fix preview
     }
 }
