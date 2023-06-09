@@ -30,11 +30,11 @@ class WorkmanagerRepository(context: Context) : IWorkManagerRepository {
         val time = LocalTime.parse(UpcomingEvent.startTime, DateTimeFormatter.ofPattern("HH:mm"))
         val eventDateTime = date.atTime(time)
         val now = LocalDate.now().atTime(LocalTime.now())
-        var duration = now.until(eventDateTime, java.time.temporal.ChronoUnit.HOURS)
+        var duration = now.until(eventDateTime, java.time.temporal.ChronoUnit.SECONDS)
 
 
         //for testing
-        //duration = SECONDS
+        duration = SECONDS
 
 
         val unit = java.util.concurrent.TimeUnit.SECONDS
