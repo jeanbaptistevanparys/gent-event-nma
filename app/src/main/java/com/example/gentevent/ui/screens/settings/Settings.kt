@@ -1,35 +1,49 @@
 package com.example.gentevent.ui.screens.settings
 
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
-import com.example.gentevent.ui.theme.GenteventTheme
 
 
 @Composable
 fun SettingsScreen(navController: NavHostController?) {
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colors.background),
-        topBar = { Top {
-            navController?.popBackStack()
-        }
+        topBar = {
+            Top {
+                navController?.popBackStack()
+            }
         },
         content = { innerPadding ->
             RoundedContainer(
                 innerPadding = innerPadding,
                 content = {
-                    Settings()
+                    SettingsContainer()
                 }
             )
         }
@@ -37,20 +51,18 @@ fun SettingsScreen(navController: NavHostController?) {
 }
 
 @Composable
-fun Settings() {
+fun SettingsContainer() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
     ) {
-        Setting(text = "setting 1")
-        Setting(text = "setting 2")
-        Setting(text = "setting 3")
+        Setting(title = "Notifications") { NotificationPermission() }
     }
 }
 
 @Composable
-fun Setting(text: String) {
+fun Setting(title: String, content: @Composable () -> Unit) {
     Row(
         modifier = Modifier
             .padding(10.dp)
@@ -62,35 +74,41 @@ fun Setting(text: String) {
         Text(
             modifier = Modifier
                 .padding(10.dp),
-            text = text,
+            text = title,
             style = MaterialTheme.typography.h6
         )
-        Switch(
-            checked = true,
-            enabled = false,
-            onCheckedChange = { isChecked ->
-                if (isChecked) {
-                    // The switch is checked
-                } else {
-                    // The switch is not checked.
-                }
-            },
-            modifier = Modifier.padding(10.dp),
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = MaterialTheme.colors.primary,
-                checkedTrackColor = MaterialTheme.colors.primary,
-                uncheckedThumbColor = Color.Gray,
-                uncheckedTrackColor = Color.LightGray,
-            )
-        )
-
+        content()
     }
 }
 
-@Preview
 @Composable
-fun SettingsPreview() {
-    GenteventTheme {
-        SettingsScreen(null)
-    }
+fun NotificationPermission() {
+    val context = LocalContext.current
+
+    val checked = remember { mutableStateOf(checkPermission(context)) }
+
+    val intent = Intent()
+    intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+    intent.putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
+
+    Switch(
+        checked = checked.value,
+        onCheckedChange = {
+            context.startActivity(intent)
+            checked.value = checkPermission(context)
+        },
+        modifier = Modifier.padding(10.dp),
+        colors = SwitchDefaults.colors(
+            checkedThumbColor = MaterialTheme.colors.primary,
+            checkedTrackColor = MaterialTheme.colors.primary,
+            uncheckedThumbColor = Color.Gray,
+            uncheckedTrackColor = Color.LightGray,
+        )
+    )
+}
+
+fun checkPermission(context: Context): Boolean {
+    val notificationManager =
+        context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    return notificationManager.areNotificationsEnabled()
 }
