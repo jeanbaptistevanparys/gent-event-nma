@@ -52,7 +52,7 @@ fun DetailFriendsScreen(navController: NavHostController, viewModel: FriendsView
                     Image(
                         painter = rememberAsyncImagePainter(model = uiState.clickedFriend?.image),
                         contentDescription = "avatar",
-                        contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                        contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .size(200.dp)
                             .clip(CircleShape)

@@ -120,7 +120,7 @@ fun DetailEvent(event: Event, viewmodel: EventViewModel) {
 
                 } else {
                     Button(
-                        onClick = { viewmodel.insertUpcomingEvents(event) ; viewmodel.scheduleNotification(event) },
+                        onClick = { viewmodel.insertUpcomingEvent(event) ; viewmodel.scheduleNotification(event) },
                     ) {
                         Column(
                             Modifier

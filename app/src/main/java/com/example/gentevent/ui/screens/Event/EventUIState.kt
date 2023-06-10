@@ -18,7 +18,7 @@ data class UpcomingEventUIState(
     val upcomingEvents: List<UpcomingEvent> = emptyList(),
     var daysuntil: Int? = null,
 )
-// todo get everyting in one state
+// todo get everything in one state if possible
 
 
 

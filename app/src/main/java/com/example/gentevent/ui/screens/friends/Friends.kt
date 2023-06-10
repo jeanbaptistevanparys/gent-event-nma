@@ -4,10 +4,22 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
@@ -22,18 +34,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
-import com.example.gentevent.ui.theme.GenteventTheme
 
 @Composable
-fun FriendsScreen(navController: NavHostController?, friendsviewModel: FriendsViewModel) {
-    val uiState by friendsviewModel.uiState.collectAsState()
-    var onclick = { navController?.navigate("detail_friends") }
+fun FriendsScreen(navController: NavHostController?, viewModel: FriendsViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+    val onclick = { navController?.navigate("detail_friends") }
     Scaffold(
         modifier = Modifier.background(color = MaterialTheme.colors.background),
         topBar = {
@@ -50,13 +60,16 @@ fun FriendsScreen(navController: NavHostController?, friendsviewModel: FriendsVi
                         .fillMaxSize()
                         .padding(10.dp)
                 ) {
-                    FriendSearchBar(friendsviewModel)
+                    FriendSearchBar(viewModel)
                     if (uiState.searchedFriends.isNotEmpty()){
-                        Friends(uiState.searchedFriends, friendsviewModel, onclick)
+                        Friends(uiState.searchedFriends, viewModel, onclick)
                     }
                     else{
-                        FriendRequests(uiState.friendRequests, friendsviewModel, {})
-                        Friends(uiState.friends, friendsviewModel, onclick)
+                        if (uiState.friendRequests.isNotEmpty())
+                            FriendRequests(uiState.friendRequests, viewModel, {})
+
+                        if (uiState.friends.isNotEmpty())
+                            Friends(uiState.friends, viewModel, onclick)
                     }
 
 
@@ -168,22 +181,12 @@ fun FriendRow(viewModel: FriendsViewModel,friend : Friend, onclick: () -> Unit? 
         Image(
             painter = rememberAsyncImagePainter(model = friend.image),
             contentDescription = "avatar",
-            contentScale = ContentScale.Crop,            // crop the image if it's not a square
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(50.dp)
-                .clip(CircleShape)                       // clip to the circle shape
+                .clip(CircleShape)
         )
         Text(text = friend.name)
         content()
-    }
-}
-
-
-
-@Preview
-@Composable
-fun FriendsScreenPreview() {
-    GenteventTheme {
-        //FriendsScreen(null, friendsviewModel)
     }
 }

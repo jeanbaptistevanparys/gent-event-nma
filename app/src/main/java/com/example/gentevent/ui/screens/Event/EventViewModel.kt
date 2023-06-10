@@ -68,7 +68,7 @@ class EventViewModel(
     }
 
 
-    fun insertUpcomingEvents(event: Event) {
+    fun insertUpcomingEvent(event: Event) {
         val ev = UpcomingEvent(
             id = event.id,
             title = event.title,

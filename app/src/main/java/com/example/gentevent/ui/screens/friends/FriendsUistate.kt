@@ -1,12 +1,10 @@
 package com.example.gentevent.ui.screens.friends
 
-import kotlin.reflect.KProperty
-
 data class FriendsUistate (
     var friends: List<Friend> = listOf(
         Friend(
             id = 1,
-            name = "bob",
+            name = "Bob",
             image = "https://yt3.googleusercontent.com/ZJGwKd4H-lsmPo6cZ2WJ7aaU6uRJYOAmj-MDIDy_Se0sUu3iM41hG3KXgVz690DeEPRqxaKx=s900-c-k-c0x00ffffff-no-rj",
             description = "Jef is a cool guy",
         ),
