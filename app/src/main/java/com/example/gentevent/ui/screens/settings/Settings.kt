@@ -1,6 +1,5 @@
 package com.example.gentevent.ui.screens.settings
 
-import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
-import okhttp3.internal.wait
 
 
 @Composable
