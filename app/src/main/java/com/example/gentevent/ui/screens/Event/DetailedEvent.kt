@@ -35,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,9 +44,12 @@ import com.example.gentevent.model.Event
 import com.example.gentevent.ui.screens.Event.EventViewModel
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -120,7 +122,11 @@ fun DetailEvent(event: Event, viewmodel: EventViewModel) {
 
                 } else {
                     Button(
-                        onClick = { viewmodel.insertUpcomingEvent(event) ; viewmodel.scheduleNotification(event) },
+                        onClick = {
+                            viewmodel.insertUpcomingEvent(event); viewmodel.scheduleNotification(
+                            event
+                        )
+                        },
                     ) {
                         Column(
                             Modifier
@@ -218,20 +224,30 @@ fun MapsLink(event: Event) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddtoCallendar(event: Event, modifier: Modifier) {
     val context = LocalContext.current
+
+
+    val date : Date = SimpleDateFormat("yyy-MM-dd").parse(event.date) as Date
+    val start : Date = SimpleDateFormat("HH:mm").parse(event.startTime) as Date
+    val end : Date = SimpleDateFormat("HH:mm").parse(event.endTime) as Date
+
+    val stattime = date.time + start.time
+    val endtime = date.time + end.time
+
+
     val intent = Intent(Intent.ACTION_INSERT)
-    intent.setData(CalendarContract.Events.CONTENT_URI)
+    intent.data = CalendarContract.Events.CONTENT_URI
     intent.putExtra(CalendarContract.Events.TITLE, event.title)
-    intent.putExtra(CalendarContract.Events.EVENT_LOCATION, event.location)
-    intent.putExtra(CalendarContract.Events.DESCRIPTION, event.description)
-    //todo find a way to add the date
-    intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, true)
-    intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.startTime)
-    intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.endTime)
-    intent.putExtra(CalendarContract.Events.ACCESS_LEVEL, CalendarContract.Events.ACCESS_PRIVATE)
-    intent.putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY)
+        .putExtra(CalendarContract.Events.EVENT_LOCATION, event.locationName)
+        .putExtra(CalendarContract.Events.DESCRIPTION, event.description)
+        .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+        .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, stattime)
+        .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endtime)
+        .putExtra(CalendarContract.Events.DTEND, date)
+        .putExtra(CalendarContract.Events.DTSTART, date)
 
 
 
@@ -240,13 +256,6 @@ fun AddtoCallendar(event: Event, modifier: Modifier) {
         onClick = {
             context.startActivity(intent)
         }) {
-        Text(text = "check in", color = Color.White, fontSize = 20.sp)
+        Text(text = "add to agenda", color = Color.White, fontSize = 20.sp)
     }
-}
-
-@Preview
-@Composable
-fun PreviewDetailEvent() {
-    //DetailEventScreen(    )
-
 }
