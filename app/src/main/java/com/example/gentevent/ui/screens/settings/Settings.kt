@@ -1,8 +1,11 @@
 package com.example.gentevent.ui.screens.settings
 
+import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.gentevent.ui.screens.components.RoundedContainer
 import com.example.gentevent.ui.screens.components.Top
+import okhttp3.internal.wait
 
 
 @Composable
@@ -91,11 +95,14 @@ fun NotificationPermission() {
     intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
     intent.putExtra("android.provider.extra.APP_PACKAGE", context.packageName)
 
+    val notificationSettingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            checked.value = checkPermission(context)
+    }
+
     Switch(
         checked = checked.value,
         onCheckedChange = {
-            context.startActivity(intent)
-            checked.value = checkPermission(context)
+            notificationSettingsLauncher.launch(intent)
         },
         modifier = Modifier.padding(10.dp),
         colors = SwitchDefaults.colors(
